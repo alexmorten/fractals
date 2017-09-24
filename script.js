@@ -14,9 +14,12 @@ function rgbToHex(r, g, b) {
 }
 
 function drawPoint({x,y,distance}){
-  var color = Math.floor(expScale(distance));
-  ctx.fillStyle = rgbToHex(color, color, 160);
-  ctx.strokeStyle = rgbToHex(color, color, 160);
+  var color = expScale(distance);
+  const r = Math.floor(color * 66);
+  const g = Math.floor(color * 128);
+  const b = Math.floor(color * 244);
+  ctx.fillStyle = ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+  debugger
   ctx.fillRect(x,y,2,2);
 }
 var points = [];
@@ -51,7 +54,7 @@ class Scale {
 
 const maxIterations = 10;
 function expScale(dist){
-  return 255-255*Math.exp(-dist/maxIterations);
+  return 1 - Math.exp(-dist/maxIterations);
 }
 
 calculatePixelDistances({
