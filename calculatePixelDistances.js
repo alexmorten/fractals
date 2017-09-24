@@ -25,17 +25,17 @@ function calculatePixelDistances({ width, height, initialValue = 0, threshold, m
   }
 
   function schedulePixel(worker) {
-    if (y == height) {
+    if (y >= height) {
       worker.terminate();
       return;
     }
 
     // console.log(`scheduling pixel (${x}, ${y})`);
     worker.postMessage({ x, y, initialValue, threshold, maxIterations });
-    x += 2;
-    if (x === width) {
+    x += 1;
+    if (x >= width) {
       x = 0;
-      y += 2;
+      y += 1;
     }
   }
 }

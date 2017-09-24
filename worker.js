@@ -53,11 +53,11 @@ global.onmessage = function onMessageReceived(message) {
 function distanceFromMandelbrotSet(x, y, initialValue, threshold, maxIterations) {
   let zPrevious = initialValue;
   let xScale = new Scale()
-  .domain(0,1000)
-  .range(-10,10);
+  .domain(0,800)
+  .range(-1,1);
   let yScale = new Scale()
-  .domain(1000,0)
-  .range(-10,10);
+  .domain(800,0)
+  .range(-1,1);
 
   const c = new Complex(xScale.exec(x), yScale.exec(y));
   let i;

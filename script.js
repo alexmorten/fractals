@@ -1,9 +1,15 @@
 import calculatePixelDistances from './calculatePixelDistances.js';
 import Complex from './Complex.js';
-
+var width = 800,height=800;
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext("2d");
+canvas.onmousemove = (e)=>{
+  let x = e.clientX;
+  let y = e.clientY;
 
+  var dist = points[x][y];
+  console.log(`dist: ${dist}`);
+}
 function componentToHex(c) {
     var hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
@@ -15,21 +21,36 @@ function rgbToHex(r, g, b) {
 
 function drawPoint({x,y,distance}){
   var color = expScale(distance);
-  const r = Math.floor(color * 66);
-  const g = Math.floor(color * 128);
-  const b = Math.floor(color * 244);
-  ctx.fillStyle = ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-  debugger
-  ctx.fillRect(x,y,2,2);
+  if(color === 1){
+    const r=0;
+    const g=0;
+    const b=0;
+    console.log("should be black");
+    ctx.fillStyle = ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+
+  }else{
+    const r = Math.floor(color * 60);
+    const g = Math.floor(color * 120);
+    const b = Math.floor(color * 255);
+    ctx.fillStyle = ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+
+  }
+
+  ctx.fillRect(x,y,4,4);
 }
-var points = [];
+var points = new Array(width);
+for (var i = 0; i < points.length; i++) {
+  points[i]=new Array(height);
+}
 function addPoint(point){
-  points.push(point);
+  points[point.x][point.y]=point.distance;
   drawPoint(point);
 }
 function redrawAllPoints(){
-  for (var i = 0; i < points.length; i++) {
-    drawPoint(points[i]);
+  for (var x = 0; x < points.length; x++) {
+    for (var y = 0; y < points.length; y++) {
+      drawPoint({x:x,y:y,distance:points[x][y]});
+    }
   }
 }
 class Scale {
@@ -52,12 +73,13 @@ class Scale {
   }
 }
 
-const maxIterations = 10;
+const maxIterations = 255;
+const factor=3;
 function expScale(dist){
-  return 1 - Math.exp(-dist/maxIterations);
+  return Math.pow(1 - 1*Math.exp(-dist/factor),8);
 }
 
 calculatePixelDistances({
-  width: 1000, height: 800, initialValue: new Complex(0, 0), threshold: 1000,
+  width: width, height: height, initialValue: new Complex(0, 0), threshold: 1000,
   maxIterations, onPixelResult: addPoint,
 });
