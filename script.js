@@ -3,14 +3,13 @@ var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext("2D");
 
 
-function drawPoint({x,y,dist}){
-  var color = expScale(dist);
+function drawPoint({x,y,distance}){
+  var color = expScale(distance);
   ctx.fillStyle=`rgb(${color},${color},160)`;
   ctx.fillRect(x,y,1,1);
 }
 var points = [];
-function addPoint(x,y,dist){
-  var point = {x:x,y:y,dist:dist};
+function addPoint(point){
   points.push(point);
   drawPoint(point);
 }
