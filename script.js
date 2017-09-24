@@ -1,13 +1,23 @@
 import calculatePixelDistances from './calculatePixelDistances.js';
+import Complex from './Complex.js';
 
 var canvas = document.getElementById('canvas');
-var ctx = canvas.getContext("2D");
+var ctx = canvas.getContext("2d");
 
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
 
 function drawPoint({x,y,distance}){
-  var color = expScale(distance);
-  ctx.fillStyle=`rgb(${color},${color},160)`;
-  ctx.fillRect(x,y,1,1);
+  var color = Math.floor(expScale(distance));
+  ctx.fillStyle = rgbToHex(color, color, 160);
+  ctx.strokeStyle = rgbToHex(color, color, 160);
+  ctx.fillRect(x,y,2,2);
 }
 var points = [];
 function addPoint(point){
@@ -39,9 +49,12 @@ class Scale {
   }
 }
 
-const scaleFactorThingy = 100; //naming is hard
+const maxIterations = 10;
 function expScale(dist){
-  return 255-255*Math.exp(-dist/scaleFactorThingy);
+  return 255-255*Math.exp(-dist/maxIterations);
 }
 
-calculatePixelDistances(2, 2, 0, 50, 100, addPoint);
+calculatePixelDistances({
+  width: 1000, height: 800, initialValue: new Complex(0, 0), threshold: 1000,
+  maxIterations, onPixelResult: addPoint,
+});
