@@ -45,9 +45,14 @@ class Scale {
 const global = this;
 
 global.onmessage = function onMessageReceived(message) {
-  const { data: { x, y, initialValue, threshold, maxIterations } } = message;
-  const distance = distanceFromMandelbrotSet(x, y, new Complex(initialValue.r, initialValue.i), threshold, maxIterations);
-  global.postMessage({ x, y, distance });
+  const { data: { points, initialValue, threshold, maxIterations } } = message;
+  var solutions = [];
+  for (var i = 0; i < points.length; i++) {
+    const point = points[i];
+    const distance = distanceFromMandelbrotSet(point.x, point.y, new Complex(initialValue.r, initialValue.i), threshold, maxIterations);
+    solutions.push({x:point.x,y:point.y,distance:distance});
+  }
+  global.postMessage({solutions:solutions});
 }
 
 function distanceFromMandelbrotSet(x, y, initialValue, threshold, maxIterations) {

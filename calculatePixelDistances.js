@@ -8,7 +8,7 @@ function calculatePixelDistances({ width, height, initialValue = 0, threshold, m
     // console.log(`spawning worker #${i}`);
     const worker = new Worker('./worker.js');
     worker.onmessage = onMessageHandler;
-    schedulePixel(worker);
+    scheduleRow(worker);
   }
 
   // for (let x = 0; x < width; x++) {
@@ -18,10 +18,12 @@ function calculatePixelDistances({ width, height, initialValue = 0, threshold, m
   // }
 
   function onMessageReceived(onPixelResult, message) {
-    const { data: { x, y, distance } } = message;
+    const { data: { solutions} } = message;
     // console.log(`Worker result: (${x}, ${y}) = ${distance}`);
-    onPixelResult({ x, y, distance });
-    schedulePixel(message.srcElement);
+    for (var i = 0; i < solutions.length; i++) {
+    onPixelResult(solutions[i]);
+    }
+    scheduleRow(message.srcElement);
   }
 
   function schedulePixel(worker) {
@@ -37,6 +39,22 @@ function calculatePixelDistances({ width, height, initialValue = 0, threshold, m
       x = 0;
       y += 1;
     }
+  }
+  function scheduleRow(worker){
+    if (y >= height) {
+      worker.terminate();
+      return;
+    }
+    var points = [];
+    while (x<width) {
+      points.push({y:y,x:x});
+      x += 1;
+    }
+    worker.postMessage({points:points,initialValue, threshold, maxIterations })
+
+      x = 0;
+      y += 1;
+
   }
 }
 

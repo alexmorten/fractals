@@ -25,7 +25,6 @@ function drawPoint({x,y,distance}){
     const r=0;
     const g=0;
     const b=0;
-    console.log("should be black");
     ctx.fillStyle = ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
 
   }else{
@@ -36,7 +35,7 @@ function drawPoint({x,y,distance}){
 
   }
 
-  ctx.fillRect(x,y,4,4);
+  ctx.fillRect(x,y,1,1);
 }
 var points = new Array(width);
 for (var i = 0; i < points.length; i++) {
@@ -74,7 +73,7 @@ class Scale {
 }
 
 const maxIterations = 255;
-const factor=3;
+const factor=3.25;
 function expScale(dist){
   return Math.pow(1 - 1*Math.exp(-dist/factor),8);
 }
