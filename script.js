@@ -42,3 +42,25 @@ const scaleFactorThingy = 100; //naming is hard
 function expScale(dist){
   return 255-255*Math.exp(-dist/scaleFactorThingy);
 }
+
+import Complex from './Complex.js';
+
+function calculatePixelDistances(width, height, initialValue = 0, threshold, maxIterations = 100, onMessageReceived) {
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < width; y++) {
+      console.log(`spawning worker for pixel (${x}, ${y})`);
+      const worker = new Worker('./worker.js');
+      worker.onmessage = onMessageReceived;
+      worker.postMessage({ x, y, initialValue, threshold, maxIterations })
+    }
+  }
+}
+
+function onMessageReceived(canvas, message) {
+  const { data: { x, y, distance } } = message;
+  console.log(`(${x}, ${y}) = ${distance}`);
+  // TODO
+}
+
+const canvas = null; // TODO
+calculatePixelDistances(2, 2, 0, 50, 100, onMessageReceived.bind(null, canvas));
