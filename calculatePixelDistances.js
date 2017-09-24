@@ -13,7 +13,7 @@ function calculatePixelDistances(width, height, initialValue = 0, threshold, max
   }
 }
 
-function onMessageReceived(message) {
+function onMessageReceived(onPixelResult, message) {
   const { data: { x, y, distance } } = message;
   console.log(`Worker result: (${x}, ${y}) = ${distance}`);
   onPixelResult({ x, y, distance });
