@@ -1,5 +1,5 @@
 function calculatePixelDistances({ width, height, initialValue = 0, threshold, maxIterations = 100, onPixelResult }) {
-  const numberOfWorkers = 4;
+  const numberOfWorkers = 16;
   const onMessageHandler = onMessageReceived.bind(null, onPixelResult);
   let x = 0;
   let y = 0;
