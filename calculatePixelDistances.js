@@ -1,4 +1,4 @@
-function calculatePixelDistances({ width, height, initialValue = 0, threshold, maxIterations = 100, onPixelResult }) {
+function calculatePixelDistances({ width, height, initialValue = 0, threshold, maxIterations = 100, onPixelResult,yScale,xScale }) {
   const numberOfWorkers = 16;
   const onMessageHandler = onMessageReceived.bind(null, onPixelResult);
   let x = 0;
@@ -46,16 +46,19 @@ function calculatePixelDistances({ width, height, initialValue = 0, threshold, m
       return;
     }
     var points = [];
-    while (x<width) {
-      points.push({y:y,x:x});
-      x += 1;
+    for (var i = 0; i < 25; i++) {
+      while (x<width) {
+        points.push({y:y,x:x});
+        x += 1;
+      }
+        x = 0;
+        y += 1;
     }
-    worker.postMessage({points:points,initialValue, threshold, maxIterations })
 
-      x = 0;
-      y += 1;
+      worker.postMessage({points:points,initialValue, threshold, maxIterations,yScale,xScale })
 
   }
+
 }
 
 export default calculatePixelDistances;

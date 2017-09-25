@@ -23,7 +23,14 @@ class Complex{
 }
 
 class Scale {
-
+  constructor(scale){
+    if(scale){
+      this.r1=scale.r1;
+      this.r2=scale.r2;
+      this.d1=scale.d1;
+      this.d2=scale.d2;
+    }
+  }
   range(r1,r2){
     this.r1=r1;
     this.r2=r2;
@@ -45,24 +52,27 @@ class Scale {
 const global = this;
 
 global.onmessage = function onMessageReceived(message) {
-  const { data: { points, initialValue, threshold, maxIterations } } = message;
+  const { data: { points, initialValue, threshold, maxIterations,yScale,xScale } } = message;
   var solutions = [];
   for (var i = 0; i < points.length; i++) {
     const point = points[i];
-    const distance = distanceFromMandelbrotSet(point.x, point.y, new Complex(initialValue.r, initialValue.i), threshold, maxIterations);
+    const distance = distanceFromMandelbrotSet(
+      point.x,
+      point.y,
+      new Complex(initialValue.r, initialValue.i),
+      threshold,
+      maxIterations,
+      new Scale(yScale),
+      new Scale(xScale)
+    );
     solutions.push({x:point.x,y:point.y,distance:distance});
   }
   global.postMessage({solutions:solutions});
 }
 
-function distanceFromMandelbrotSet(x, y, initialValue, threshold, maxIterations) {
+function distanceFromMandelbrotSet(x, y, initialValue, threshold, maxIterations,yScale,xScale) {
   let zPrevious = initialValue;
-  let xScale = new Scale()
-  .domain(0,800)
-  .range(-1,1);
-  let yScale = new Scale()
-  .domain(800,0)
-  .range(-1,1);
+
 
   const c = new Complex(xScale.exec(x), yScale.exec(y));
   let i;
